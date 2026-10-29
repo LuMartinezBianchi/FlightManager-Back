@@ -7,6 +7,7 @@ import express from 'express';
 import { aeropuertosRouter } from './features/aeropuertos/aeropuertos.routes';
 import { libroRouter } from './features/libro/libro.routes';
 import { mapaRouter } from './features/mapa/mapa.routes';
+import { meteoRouter } from './features/meteo/meteo.routes';
 import { programacionRouter } from './features/programacion/programacion.routes';
 import { vuelosRouter } from './features/vuelos/vuelos.routes';
 
@@ -31,6 +32,7 @@ app.get('/api/health', (_req, res) => {
 app.use(aeropuertosRouter);
 app.use(libroRouter);
 app.use(mapaRouter);
+app.use(meteoRouter);
 app.use(vuelosRouter);
 app.use(programacionRouter);
 

@@ -1,21 +1,13 @@
-// Rutas HTTP del libro de vuelo: listar las hojas y guardar la de un vuelo.
+// Rutas HTTP del libro de vuelo: listar las hojas, guardar la de un vuelo y exportarlas a .xlsx.
 import { Router } from 'express';
 
 import { prisma } from '../../db';
+import { exportarLibro } from './libro.exportar';
 import { guardarHoja, listHojas } from './libro.service';
+import { yaAterrizo } from '../vuelos/vuelos.tiempo';
 import { validarHoja } from './libro.validation';
 
 export const libroRouter = Router();
-
-// El vuelo ya paso cuando su llegada es anterior a ahora (si llega antes de salir, aterriza al dia siguiente)
-function yaAterrizo(fecha: string, dep: string, arr: string) {
-  const [anio, mes, dia] = fecha.split('-').map(Number);
-  const [depH, depM] = dep.split(':').map(Number);
-  const [arrH, arrM] = (arr || dep).split(':').map(Number);
-  const llegada = new Date(anio, mes - 1, dia, arrH, arrM);
-  if (arrH * 60 + arrM < depH * 60 + depM) llegada.setDate(llegada.getDate() + 1);
-  return llegada <= new Date();
-}
 
 // GET /api/libro -> 200 con las hojas guardadas
 libroRouter.get('/api/libro', async (_req, res) => {
@@ -49,5 +41,29 @@ libroRouter.put('/api/libro/:number/:fecha', async (req, res) => {
     res.json({ ok: true });
   } catch {
     res.status(500).json({ error: 'No se pudo guardar el libro de vuelo' });
+  }
+});
+
+// POST /api/libro/exportar -> 200 con el .xlsx de los vuelos pedidos ([{ number, date }]), 400 si falta alguno o no esta completo
+libroRouter.post('/api/libro/exportar', async (req, res) => {
+  const pedidos: unknown = req.body;
+  const validos =
+    Array.isArray(pedidos) &&
+    pedidos.length > 0 &&
+    pedidos.every(
+      (p) => typeof p?.number === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(p?.date ?? ''),
+    );
+  if (!validos) return res.status(400).json({ error: 'Se espera una lista de vuelos (number y date)' });
+
+  try {
+    const vuelos = (pedidos as { number: string; date: string }[]).map((p) => ({ number: p.number.toUpperCase(), date: p.date }));
+    const resultado = await exportarLibro(vuelos);
+    if (!resultado.ok) return res.status(400).json({ error: resultado.error });
+
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', 'attachment; filename="libro_de_vuelo.xlsx"');
+    res.send(resultado.archivo);
+  } catch {
+    res.status(500).json({ error: 'No se pudo generar el archivo' });
   }
 });
