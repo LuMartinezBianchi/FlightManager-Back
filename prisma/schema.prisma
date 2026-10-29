@@ -1,5 +1,5 @@
 // Tablas de FlightManager. Los nombres de tabla (@@map) son los que pidió la materia.
-// Aeropuertos: catálogo de Argentina. Programación: vuelos del parser o cargados a mano.
+// Aeropuertos: catálogo de Argentina. Vuelos: los del parser o cargados a mano. Programación: tipo de cada día.
 // Plan de vuelo: una fila por tramo de la hoja de libro. Los nombres de campo son los mismos keys de logbook-form.ts.
 
 generator client {
@@ -18,13 +18,12 @@ model Aeropuerto {
   name                String
   latitude            Float
   longitude           Float
-  salidas             Programacion[] @relation("origen")
-  llegadas            Programacion[] @relation("destino")
-
+  vuelosOrigen        Vuelo[]     @relation("origen")
+  vuelosDestino       Vuelo[]     @relation("destino")
   @@map("aeropuertos")
 }
 
-model Programacion {
+model Vuelo {
   id            Int         @id @default(autoincrement())
   number        String
   date          DateTime
@@ -36,18 +35,27 @@ model Programacion {
   arr           String
   duration      String
   aircraft      String?
-  // Tripulación: un nombre por línea, igual que en el alta manual
   crew          String?
-  // "parser" si vino del .xlsx, "manual" si se cargó a mano
-  source        String      @default("manual")
 
   // El mismo numero de vuelo puede repetirse en otro dia: la clave es numero + fecha
   @@unique([number, date])
+  @@map("vuelos")
+}
+
+// Tipo de actividad de cada dia: vuelo, deadhead, reserva, franco o sin_asignar.
+// Va aparte de vuelos para no tener campos vacios en los dias sin vuelo.
+model Programacion {
+  id   Int      @id @default(autoincrement())
+  date DateTime @unique
+  type String
+
   @@map("programacion")
 }
 
 model PlanDeVuelo {
   id                      Int       @id @default(autoincrement())
+  // Vuelo de la programación al que pertenece la hoja (número + fecha, igual que en vuelos)
+  number                  String
   // Día, mes y año de la hoja, unidos en una fecha
   fecha                   DateTime
   horaSalida              String
@@ -78,8 +86,9 @@ model PlanDeVuelo {
   instrumentoRealPiloto   Float?
   instrumentoRealCopiloto Float?
   instrumentoCapota       Float?
-  // Firma del titular como PNG en base64 (data URL)
-  firma                   String
+  // Firma del titular como PNG en base64 (data URL). Sin firma la hoja queda incompleta, pero se puede guardar
+  firma                   String?
 
+  @@unique([number, fecha])
   @@map("plan_de_vuelo")
 }

@@ -3,7 +3,7 @@ import { prisma } from '../../db';
 
 // fecha en YYYY-MM-DD identifica el vuelo exacto. Sin fecha, muestra el mas proximo (la fecha mas temprana)
 export async function getMapaVuelo(number: string, fecha?: string) {
-  const vuelo = await prisma.programacion.findFirst({
+  const vuelo = await prisma.vuelo.findFirst({
     where: fecha ? { number, date: new Date(`${fecha}T00:00:00Z`) } : { number },
     orderBy: { date: 'asc' },
     include: { origin: true, destination: true },

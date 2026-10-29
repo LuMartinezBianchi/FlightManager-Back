@@ -5,8 +5,10 @@ import cors from 'cors';
 import express from 'express';
 
 import { aeropuertosRouter } from './features/aeropuertos/aeropuertos.routes';
+import { libroRouter } from './features/libro/libro.routes';
 import { mapaRouter } from './features/mapa/mapa.routes';
 import { programacionRouter } from './features/programacion/programacion.routes';
+import { vuelosRouter } from './features/vuelos/vuelos.routes';
 
 const app = express();
 const port = Number(process.env.PORT ?? 3000);
@@ -27,7 +29,9 @@ app.get('/api/health', (_req, res) => {
 });
 
 app.use(aeropuertosRouter);
+app.use(libroRouter);
 app.use(mapaRouter);
+app.use(vuelosRouter);
 app.use(programacionRouter);
 
 app.listen(port, () => {
