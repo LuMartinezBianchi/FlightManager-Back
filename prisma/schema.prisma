@@ -1,0 +1,34 @@
+// Fuente de verdad de los datos del mapa: aeropuertos y vuelos.
+// El front no tiene coordenadas propias: las pide a la API, que las lee de aca.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Airport {
+  id         Int      @id @default(autoincrement())
+  iata       String   @unique
+  name       String
+  latitude   Float
+  longitude  Float
+  departures Flight[] @relation("origin")
+  arrivals   Flight[] @relation("destination")
+}
+
+model Flight {
+  id            Int     @id @default(autoincrement())
+  number        String  @unique
+  originId      Int
+  destinationId Int
+  origin        Airport @relation("origin", fields: [originId], references: [id])
+  destination   Airport @relation("destination", fields: [destinationId], references: [id])
+  dep           String
+  arr           String
+  duration      String
+  aircraft      String
+}
