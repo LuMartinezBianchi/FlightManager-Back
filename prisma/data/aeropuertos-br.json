@@ -1,0 +1,142 @@
+[
+  {
+    "iata": "GRU",
+    "icao": "SBGR",
+    "name": "São Paulo/Guarulhos–Governor André Franco Montoro International Airport",
+    "latitude": -23.431274,
+    "longitude": -46.469954
+  },
+  {
+    "iata": "CGH",
+    "icao": "SBSP",
+    "name": "Congonhas–Deputado Freitas Nobre Airport",
+    "latitude": -23.627657,
+    "longitude": -46.654601
+  },
+  {
+    "iata": "GIG",
+    "icao": "SBGL",
+    "name": "Rio de Janeiro Galeão – Tom Jobim International Airport",
+    "latitude": -22.809999,
+    "longitude": -43.250557
+  },
+  {
+    "iata": "BSB",
+    "icao": "SBBR",
+    "name": "Presidente Juscelino Kubitschek International Airport",
+    "latitude": -15.869167,
+    "longitude": -47.920834
+  },
+  {
+    "iata": "CNF",
+    "icao": "SBCF",
+    "name": "Tancredo Neves International Airport",
+    "latitude": -19.63571,
+    "longitude": -43.966928
+  },
+  {
+    "iata": "SDU",
+    "icao": "SBRJ",
+    "name": "Santos Dumont Airport",
+    "latitude": -22.910397,
+    "longitude": -43.16282
+  },
+  {
+    "iata": "VCP",
+    "icao": "SBKP",
+    "name": "Viracopos International Airport",
+    "latitude": -23.007404,
+    "longitude": -47.134502
+  },
+  {
+    "iata": "POA",
+    "icao": "SBPA",
+    "name": "Porto Alegre-Salgado Filho International Airport",
+    "latitude": -29.993984,
+    "longitude": -51.167482
+  },
+  {
+    "iata": "REC",
+    "icao": "SBRF",
+    "name": "Recife/Guararapes - Gilberto Freyre International Airport",
+    "latitude": -8.12747,
+    "longitude": -34.922961
+  },
+  {
+    "iata": "SSA",
+    "icao": "SBSV",
+    "name": "Deputado Luiz Eduardo Magalhães International Airport",
+    "latitude": -12.908611,
+    "longitude": -38.322498
+  },
+  {
+    "iata": "CWB",
+    "icao": "SBCT",
+    "name": "Curitiba-Afonso Pena International Airport",
+    "latitude": -25.5285,
+    "longitude": -49.1758
+  },
+  {
+    "iata": "FOR",
+    "icao": "SBFZ",
+    "name": "Pinto Martins International Airport",
+    "latitude": -3.775833,
+    "longitude": -38.532222
+  },
+  {
+    "iata": "BEL",
+    "icao": "SBBE",
+    "name": "Val de Cans/Júlio Cezar Ribeiro International Airport",
+    "latitude": -1.379279,
+    "longitude": -48.476207
+  },
+  {
+    "iata": "MAO",
+    "icao": "SBEG",
+    "name": "Eduardo Gomes International Airport",
+    "latitude": -3.03861,
+    "longitude": -60.049702
+  },
+  {
+    "iata": "GYN",
+    "icao": "SBGO",
+    "name": "Santa Genoveva International Airport",
+    "latitude": -16.632,
+    "longitude": -49.220699
+  },
+  {
+    "iata": "FLN",
+    "icao": "SBFL",
+    "name": "Hercílio Luz International Airport",
+    "latitude": -27.670279,
+    "longitude": -48.552502
+  },
+  {
+    "iata": "CGB",
+    "icao": "SBCY",
+    "name": "Várzea Grande–Marechal Rondon International Airport",
+    "latitude": -15.6529,
+    "longitude": -56.116699
+  },
+  {
+    "iata": "NAT",
+    "icao": "SBSG",
+    "name": "Rio Grande do Norte/São Gonçalo do Amarante–Governador Aluízio Alves International Airport",
+    "latitude": -5.769822,
+    "longitude": -35.36661
+  },
+  {
+    "iata": "VIX",
+    "icao": "SBVT",
+    "name": "Eurico de Aguiar Salles International Airport",
+    "latitude": -20.258,
+    "longitude": -40.285
+  },
+  {
+    "iata": "IGU",
+    "icao": "SBFI",
+    "name": "Cataratas International Airport",
+    "latitude": -25.594167,
+    "longitude": -54.489444
+  }
+]

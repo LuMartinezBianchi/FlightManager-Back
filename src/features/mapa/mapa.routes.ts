@@ -10,8 +10,13 @@ mapaRouter.get('/api/vuelos/:number/mapa', async (req, res) => {
   const number = String(req.params.number ?? '').trim().toUpperCase();
   if (!number) return res.status(400).json({ error: 'El número de vuelo no es válido' });
 
+  const fecha = typeof req.query.fecha === 'string' ? req.query.fecha : undefined;
+  if (fecha !== undefined && !/^\d{4}-\d{2}-\d{2}$/.test(fecha)) {
+    return res.status(400).json({ error: 'La fecha tiene que ser AAAA-MM-DD' });
+  }
+
   try {
-    const mapa = await getMapaVuelo(number);
+    const mapa = await getMapaVuelo(number, fecha);
     if (!mapa) return res.status(404).json({ error: 'No existe el vuelo' });
     res.json(mapa);
   } catch {

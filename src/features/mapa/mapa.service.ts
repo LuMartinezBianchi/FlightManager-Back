@@ -1,27 +1,29 @@
 // Lógica de datos del mapa de un vuelo. Solo consulta Prisma; no conoce HTTP.
 import { prisma } from '../../db';
 
-export async function getMapaVuelo(number: string) {
-  const flight = await prisma.flight.findUnique({
-    where: { number },
+// fecha en YYYY-MM-DD identifica el vuelo exacto. Sin fecha, muestra el mas proximo (la fecha mas temprana)
+export async function getMapaVuelo(number: string, fecha?: string) {
+  const vuelo = await prisma.programacion.findFirst({
+    where: fecha ? { number, date: new Date(`${fecha}T00:00:00Z`) } : { number },
+    orderBy: { date: 'asc' },
     include: { origin: true, destination: true },
   });
 
-  if (!flight) return null;
+  if (!vuelo) return null;
 
   return {
-    number: flight.number,
+    number: vuelo.number,
     origin: {
-      iata: flight.origin.iata,
-      name: flight.origin.name,
-      latitude: flight.origin.latitude,
-      longitude: flight.origin.longitude,
+      iata: vuelo.origin.iata,
+      name: vuelo.origin.name,
+      latitude: vuelo.origin.latitude,
+      longitude: vuelo.origin.longitude,
     },
     destination: {
-      iata: flight.destination.iata,
-      name: flight.destination.name,
-      latitude: flight.destination.latitude,
-      longitude: flight.destination.longitude,
+      iata: vuelo.destination.iata,
+      name: vuelo.destination.name,
+      latitude: vuelo.destination.latitude,
+      longitude: vuelo.destination.longitude,
     },
   };
 }

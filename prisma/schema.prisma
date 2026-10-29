@@ -1,5 +1,6 @@
-// Fuente de verdad de los datos del mapa: aeropuertos y vuelos.
-// El front no tiene coordenadas propias: las pide a la API, que las lee de aca.
+// Tablas de FlightManager. Los nombres de tabla (@@map) son los que pidió la materia.
+// Aeropuertos: catálogo de Argentina. Programación: vuelos del parser o cargados a mano.
+// Plan de vuelo: una fila por tramo de la hoja de libro. Los nombres de campo son los mismos keys de logbook-form.ts.
 
 generator client {
   provider = "prisma-client-js"
@@ -10,25 +11,75 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Airport {
-  id         Int      @id @default(autoincrement())
-  iata       String   @unique
-  name       String
-  latitude   Float
-  longitude  Float
-  departures Flight[] @relation("origin")
-  arrivals   Flight[] @relation("destination")
+model Aeropuerto {
+  id                  Int         @id @default(autoincrement())
+  iata                String      @unique
+  icao                String      @unique
+  name                String
+  latitude            Float
+  longitude           Float
+  salidas             Programacion[] @relation("origen")
+  llegadas            Programacion[] @relation("destino")
+
+  @@map("aeropuertos")
 }
 
-model Flight {
-  id            Int     @id @default(autoincrement())
-  number        String  @unique
+model Programacion {
+  id            Int         @id @default(autoincrement())
+  number        String
+  date          DateTime
   originId      Int
   destinationId Int
-  origin        Airport @relation("origin", fields: [originId], references: [id])
-  destination   Airport @relation("destination", fields: [destinationId], references: [id])
+  origin        Aeropuerto  @relation("origen", fields: [originId], references: [id])
+  destination   Aeropuerto  @relation("destino", fields: [destinationId], references: [id])
   dep           String
   arr           String
   duration      String
-  aircraft      String
+  aircraft      String?
+  // Tripulación: un nombre por línea, igual que en el alta manual
+  crew          String?
+  // "parser" si vino del .xlsx, "manual" si se cargó a mano
+  source        String      @default("manual")
+
+  // El mismo numero de vuelo puede repetirse en otro dia: la clave es numero + fecha
+  @@unique([number, date])
+  @@map("programacion")
+}
+
+model PlanDeVuelo {
+  id                      Int       @id @default(autoincrement())
+  // Día, mes y año de la hoja, unidos en una fecha
+  fecha                   DateTime
+  horaSalida              String
+  desde                   String
+  hasta                   String
+  horaLlegada             String
+  finalidadVuelo          String
+  marca                   String
+  matricula               String
+  potencia                Int
+  clase                   String
+  // Tiempos en horas decimales (1h 30m = 1.5)
+  sobreDiaPiloto          Float?
+  sobreDiaCopiloto        Float?
+  sobreNochePiloto        Float?
+  sobreNocheCopiloto      Float?
+  travesiaDiaPiloto       Float?
+  travesiaDiaCopiloto     Float?
+  travesiaNochePiloto     Float?
+  travesiaNocheCopiloto   Float?
+  navegadorMecanico       Int?
+  aterrizajes             Int?
+  instruccion             Float?
+  multimotor              Float?
+  reactor                 Float?
+  turbohelice             Float?
+  adiestradorTerrestre    Float?
+  instrumentoRealPiloto   Float?
+  instrumentoRealCopiloto Float?
+  instrumentoCapota       Float?
+  // Firma del titular como PNG en base64 (data URL)
+  firma                   String
+
+  @@map("plan_de_vuelo")
 }
