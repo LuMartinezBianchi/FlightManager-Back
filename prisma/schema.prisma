@@ -105,7 +105,7 @@ model PlanDeVuelo {
   instrumentoRealPiloto   Float?
   instrumentoRealCopiloto Float?
   instrumentoCapota       Float?
-  // Firma del titular como PNG en base64 (data URL). Sin firma la hoja queda incompleta, pero se puede guardar
+  // Firma del titular como PNG en base64 (data URL). Es obligatoria: sin firma el back rechaza la hoja
   firma                   String
 
   @@unique([pilotoId, number, fecha])

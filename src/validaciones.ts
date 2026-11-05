@@ -184,7 +184,7 @@ export type HojaValida = {
   tiempos: Partial<Record<CampoTiempo, number>>; // horas decimales
   navegadorMecanico: number | null;
   aterrizajes: number | null;
-  firma: string | null; // PNG en base64
+  firma: string; // PNG en base64 (obligatoria)
 };
 
 // "1:30" -> 1.5
@@ -265,6 +265,11 @@ export async function validarHoja(
   const navegadorMecanico = cantidad("navegadorMecanico");
   const aterrizajes = cantidad("aterrizajes");
 
+  // La firma es obligatoria: un PNG en base64 como "data:image/png;base64,....." (lo que arma el pad de firma de la app).
+  const firma = leer(d.firma);
+  if (!firma) errores.firma = "La firma es obligatoria";
+  else if (!firma.startsWith("data:image/png;base64,")) errores.firma = "La firma no es válida (tiene que ser un PNG)";
+
   if (Object.keys(errores).length > 0 || potencia === null) return { ok: false, errores };
 
   // Los dos aeropuertos (codigo OACI) tienen que existir en la tabla aeropuertos.
@@ -278,7 +283,7 @@ export async function validarHoja(
     ok: true,
     hoja: {
       fecha, horaSalida, desde, hasta, horaLlegada, finalidadVuelo, marca, matricula,
-      potencia, clase, tiempos, navegadorMecanico, aterrizajes, firma: leer(d.firma) || null,
+      potencia, clase, tiempos, navegadorMecanico, aterrizajes, firma,
     },
   };
 }
