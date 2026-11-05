@@ -1,5 +1,6 @@
-// Meteorologia de aeropuertos. Consulta los METAR del Aviation Weather Center de NOAA (gratis, sin clave).
-// No conoce HTTP de la app ni la base: recibe codigos OACI y devuelve el reporte mas reciente de cada uno.
+// Endpoint: GET /api/meteo?icao=SAEZ,SACO   (la ruta esta en index.ts, seccion "Meteorologia").
+// Consulta los METAR del Aviation Weather Center de NOAA (gratis, sin clave).
+// No usa la base: recibe codigos OACI y devuelve el reporte mas reciente de cada uno.
 
 const URL_METAR = 'https://aviationweather.gov/api/data/metar';
 const TIMEOUT_MS = 8000;

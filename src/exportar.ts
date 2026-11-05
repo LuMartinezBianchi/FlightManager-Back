@@ -1,12 +1,14 @@
-// Exporta hojas del libro de vuelo a .xlsx usando la plantilla oficial (assets/libro_de_vuelo.xlsx).
-// La plantilla tiene 14 filas de vuelos por pagina; si hay mas, se agrega una hoja por pagina.
+// Endpoint: POST /api/libro/exportar   (la ruta esta en index.ts, seccion "Libro de vuelo").
+// Arma el .xlsx del libro de vuelo sobre la plantilla oficial (assets/libro_de_vuelo.xlsx).
+// La plantilla tiene 14 filas por pagina; si hay mas vuelos se agrega una hoja "Pagina N".
+// Si cambia la plantilla, hay que tocar PRIMERA_FILA, FILAS_POR_PAGINA, COLUMNAS_TIEMPO y COLUMNA_FIRMA.
 import path from 'node:path';
 
 import ExcelJS from 'exceljs';
 
-import { prisma } from '../../db';
+import { prisma } from './db';
 
-const PLANTILLA = path.join(__dirname, '../../../assets/libro_de_vuelo.xlsx');
+const PLANTILLA = path.join(__dirname, '../assets/libro_de_vuelo.xlsx');
 const FILAS_POR_PAGINA = 14;
 const PRIMERA_FILA = 5;
 

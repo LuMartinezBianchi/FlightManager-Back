@@ -1,4 +1,4 @@
-// Un solo cliente de Prisma para toda la API. Las rutas no crean su propio cliente.
-import { PrismaClient } from '@prisma/client';
+// UN solo PrismaClient para toda la API (index.ts y los demas archivos lo importan de aca).
+import { PrismaClient } from "@prisma/client";
 
 export const prisma = new PrismaClient();
