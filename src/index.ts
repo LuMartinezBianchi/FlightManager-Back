@@ -123,10 +123,9 @@ function leerCuenta(body: unknown) {
 }
 
 // POST /api/registro
-// Body: { email, password }. Guarda el salt y el hash de (contraseña + salt), nunca la contraseña.
-// 201 { token } (ya queda con sesion abierta) | 400 datos invalidos | 409 el email ya existe.
 app.post("/api/registro", async (req, res) => {
   const { email, password } = leerCuenta(req.body);
+
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return res.status(400).json({ error: "Email inválido" });
   if (password.length < 8) return res.status(400).json({ error: "La contraseña tiene que tener al menos 8 caracteres" });
 
@@ -142,8 +141,6 @@ app.post("/api/registro", async (req, res) => {
 });
 
 // POST /api/login
-// Body: { email, password }. Vuelve a calcular hash(contraseña + salt guardado) y compara HASH contra HASH.
-// 200 { token } | 401 email o contraseña incorrectos (mismo mensaje en los dos casos).
 app.post("/api/login", async (req, res) => {
   const { email, password } = leerCuenta(req.body);
 
@@ -159,8 +156,7 @@ app.post("/api/login", async (req, res) => {
   res.json({ token });
 });
 
-// POST /api/logout
-// Borra el token del piloto: desde ese momento el token viejo da 401. 204 ok | 401 sin sesion.
+// POST /api/logout (borra token)
 app.post("/api/logout", requerirSesion, async (_req, res) => {
   await prisma.piloto.update({ where: { id: pilotoDe(res) }, data: { token: null } });
 
@@ -187,7 +183,6 @@ app.get("/api/aeropuertos", async (_req, res) => {
 // -----------------------------------------------------------------------------
 
 // GET /api/vuelos
-// Lista los vuelos DEL PILOTO con origen y destino en codigo IATA.
 app.get("/api/vuelos", async (_req, res) => {
   const vuelos = await prisma.vuelo.findMany({
     where: { pilotoId: pilotoDe(res) },
@@ -211,7 +206,6 @@ app.get("/api/vuelos", async (_req, res) => {
 });
 
 // POST /api/vuelos
-// Body: lista de { number, date, from, to, dep, arr, ... }.
 // Guarda TODOS o NINGUNO. 201 ok | 400 fila invalida | 409 algun vuelo ya existe.
 app.post("/api/vuelos", async (req, res) => {
   const validacion = await validarVuelos(req.body);
@@ -245,7 +239,6 @@ app.post("/api/vuelos", async (req, res) => {
 
 // PUT /api/vuelos/:number/:fecha
 // Reemplaza el vuelo identificado por numero + fecha con el body (un solo vuelo).
-// 200 ok | 400 datos invalidos | 404 no existe | 409 el nuevo numero+fecha ya existe.
 app.put("/api/vuelos/:number/:fecha", async (req, res) => {
   const numero = req.params.number.toUpperCase();
   const { fecha } = req.params;
@@ -279,7 +272,6 @@ app.put("/api/vuelos/:number/:fecha", async (req, res) => {
 });
 
 // DELETE /api/vuelos/:number/:fecha
-// Borra el vuelo. 204 ok (sin body) | 400 fecha invalida | 404 no existe.
 app.delete("/api/vuelos/:number/:fecha", async (req, res) => {
   const numero = req.params.number.toUpperCase();
   const { fecha } = req.params;
@@ -295,7 +287,6 @@ app.delete("/api/vuelos/:number/:fecha", async (req, res) => {
 
 // GET /api/vuelos/:number/mapa?fecha=AAAA-MM-DD
 // Coordenadas de origen y destino para dibujar el mapa. Sin ?fecha= toma el vuelo mas cercano.
-// 200 ok | 400 datos invalidos | 404 no existe.
 app.get("/api/vuelos/:number/mapa", async (req, res) => {
   const number = req.params.number.trim().toUpperCase();
   if (!number) return res.status(400).json({ error: "El número de vuelo no es válido" });
@@ -330,8 +321,6 @@ app.get("/api/programacion", async (_req, res) => {
 });
 
 // POST /api/programacion
-// Body: lista de { date, type }. Si el dia ya existe le cambia el tipo (upsert).
-// 201 ok | 400 fila invalida.
 app.post("/api/programacion", async (req, res) => {
   const validacion = validarDias(req.body);
   if (!validacion.ok) {
@@ -358,7 +347,6 @@ app.post("/api/programacion", async (req, res) => {
 // -----------------------------------------------------------------------------
 
 // GET /api/libro
-// Devuelve cada hoja con los mismos keys del formulario de la app (todo como texto).
 app.get("/api/libro", async (_req, res) => {
   const hojas = await prisma.planDeVuelo.findMany({ where: { pilotoId: pilotoDe(res) }, orderBy: { fecha: "asc" } });
 
@@ -396,7 +384,6 @@ app.get("/api/libro", async (_req, res) => {
 
 // PUT /api/libro/:number/:fecha
 // Crea la hoja del vuelo o la reemplaza si ya existia (upsert).
-// 200 ok | 400 datos invalidos o vuelo que todavia no aterrizo | 404 el vuelo no existe.
 app.put("/api/libro/:number/:fecha", async (req, res) => {
   const number = req.params.number.toUpperCase();
   const { fecha } = req.params;
@@ -446,8 +433,6 @@ app.put("/api/libro/:number/:fecha", async (req, res) => {
 });
 
 // POST /api/libro/exportar
-// Body: [{ number, date }, ...] (los vuelos elegidos). Responde el archivo .xlsx.
-// 200 archivo | 400 pedido invalido, falta alguna hoja o alguna esta incompleta.
 app.post("/api/libro/exportar", async (req, res) => {
   const pedidos = req.body;
   const valido =
@@ -473,7 +458,6 @@ app.post("/api/libro/exportar", async (req, res) => {
 // -----------------------------------------------------------------------------
 
 // GET /api/meteo?icao=SAEZ,SACO
-// Ultimo METAR de hasta 10 aeropuertos. 200 ok | 400 codigos invalidos | 502 falla NOAA.
 app.get("/api/meteo", async (req, res) => {
   const icaos = String(req.query.icao ?? "")
     .split(",")
@@ -495,7 +479,6 @@ app.get("/api/meteo", async (req, res) => {
 // 8. Errores inesperados y arranque
 // -----------------------------------------------------------------------------
 
-// Si una ruta falla sin controlar el error (ej. se cayo la base), responde 500 en JSON.
 app.use((error: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error(error);
   res.status(500).json({ error: "Error inesperado en el servidor" });

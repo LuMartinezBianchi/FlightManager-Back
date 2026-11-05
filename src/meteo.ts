@@ -1,6 +1,4 @@
 // Endpoint: GET /api/meteo?icao=SAEZ,SACO   (la ruta esta en index.ts, seccion "Meteorologia").
-// Consulta los METAR del Aviation Weather Center de NOAA (gratis, sin clave).
-// No usa la base: recibe codigos OACI y devuelve el reporte mas reciente de cada uno.
 
 const URL_METAR = 'https://aviationweather.gov/api/data/metar';
 const TIMEOUT_MS = 8000;
@@ -75,9 +73,11 @@ export async function getMeteo(icaos: string[]): Promise<Meteo[]> {
     const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
     try {
       const response = await fetch(`${URL_METAR}?ids=${faltantes.join(',')}&format=json`, { signal: controller.signal });
+      
       if (!response.ok) throw new Error(`NOAA respondio ${response.status}`);
       // Sin reportes, NOAA responde 204 sin cuerpo
       const reportes = response.status === 204 ? [] : ((await response.json()) as MetarNoaa[]);
+      
       for (const reporte of reportes) {
         const datos = convertir(reporte);
         cache.set(datos.icao, { guardado: ahora, datos });

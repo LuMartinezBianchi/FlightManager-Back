@@ -305,3 +305,4 @@ export function yaAterrizo(fecha: string, dep: string, arr: string): boolean {
   if (minutosDelDia(hora) < minutosDelDia(dep)) llegada.setDate(llegada.getDate() + 1);
   return llegada <= new Date();
 }
+
