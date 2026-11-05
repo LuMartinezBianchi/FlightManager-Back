@@ -1,6 +1,4 @@
 // Carga inicial del catálogo de aeropuertos: Argentina y los 20 principales de Brasil.
-// La programación no se carga acá: la cargan el parser o el alta manual.
-// Corre con: npm run db:seed
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
