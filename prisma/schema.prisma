@@ -1,0 +1,113 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Usuario de la app. Cada vuelo, dia de programacion y hoja del libro pertenece a un piloto.
+// La contraseña NUNCA se guarda: solo el salt y el hash de (contraseña + salt).
+// token: la sesion abierta (se crea al hacer login y se borra al cerrar sesion).
+model Piloto {
+  id           Int            @id @default(autoincrement())
+  email        String         @unique
+  salt         String
+  passwordHash String
+  token        String?        @unique
+  vuelos       Vuelo[]
+  programacion Programacion[]
+  hojas        PlanDeVuelo[]
+
+  @@map("pilotos")
+}
+
+model Aeropuerto {
+  id                  Int         @id @default(autoincrement())
+  iata                String      @unique
+  icao                String      @unique
+  name                String
+  latitude            Float
+  longitude           Float
+  vuelosOrigen        Vuelo[]     @relation("origen")
+  vuelosDestino       Vuelo[]     @relation("destino")
+  @@map("aeropuertos")
+}
+
+model Vuelo {
+  id            Int         @id @default(autoincrement())
+  pilotoId      Int
+  piloto        Piloto      @relation(fields: [pilotoId], references: [id])
+  number        String
+  date          DateTime
+  originId      Int
+  destinationId Int
+  origin        Aeropuerto  @relation("origen", fields: [originId], references: [id])
+  destination   Aeropuerto  @relation("destino", fields: [destinationId], references: [id])
+  dep           String
+  arr           String
+  duration      String
+  aircraft      String?
+  crew          String?
+
+  // El mismo numero de vuelo puede repetirse en otro dia (y en otro piloto): la clave es piloto + numero + fecha
+  @@unique([pilotoId, number, date])
+  @@map("vuelos")
+}
+
+// Tipo de actividad de cada dia: vuelo, deadhead, reserva, franco o sin_asignar.
+model Programacion {
+  id       Int      @id @default(autoincrement())
+  pilotoId Int
+  piloto   Piloto   @relation(fields: [pilotoId], references: [id])
+  date     DateTime
+  type     String
+
+  // Un dia por piloto
+  @@unique([pilotoId, date])
+  @@map("programacion")
+}
+
+model PlanDeVuelo {
+  id                      Int       @id @default(autoincrement())
+  pilotoId                Int
+  piloto                  Piloto    @relation(fields: [pilotoId], references: [id])
+  // Vuelo de la programación al que pertenece la hoja (número + fecha, igual que en vuelos)
+  number                  String
+  // Día, mes y año de la hoja, unidos en una fecha
+  fecha                   DateTime
+  horaSalida              String
+  desde                   String
+  hasta                   String
+  horaLlegada             String
+  finalidadVuelo          String
+  marca                   String
+  matricula               String
+  potencia                Int
+  clase                   String
+  // Tiempos en horas decimales (1h 30m = 1.5)
+  sobreDiaPiloto          Float?
+  sobreDiaCopiloto        Float?
+  sobreNochePiloto        Float?
+  sobreNocheCopiloto      Float?
+  travesiaDiaPiloto       Float?
+  travesiaDiaCopiloto     Float?
+  travesiaNochePiloto     Float?
+  travesiaNocheCopiloto   Float?
+  navegadorMecanico       Int?
+  aterrizajes             Int?
+  instruccion             Float?
+  multimotor              Float?
+  reactor                 Float?
+  turbohelice             Float?
+  adiestradorTerrestre    Float?
+  instrumentoRealPiloto   Float?
+  instrumentoRealCopiloto Float?
+  instrumentoCapota       Float?
+  // Firma del titular como PNG en base64 (data URL). Es obligatoria: sin firma el back rechaza la hoja
+  firma                   String
+
+  @@unique([pilotoId, number, fecha])
+  @@map("plan_de_vuelo")
+}

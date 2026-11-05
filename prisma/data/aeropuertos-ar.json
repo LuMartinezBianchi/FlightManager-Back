@@ -1,0 +1,723 @@
+[
+  {
+    "iata": "AEP",
+    "icao": "SABE",
+    "name": "Aeroparque Jorge Newbery",
+    "latitude": -34.559419,
+    "longitude": -58.415536
+  },
+  {
+    "iata": "AFA",
+    "icao": "SAMR",
+    "name": "Suboficial Ay Santiago Germano Airport",
+    "latitude": -34.588299,
+    "longitude": -68.4039
+  },
+  {
+    "iata": "AOL",
+    "icao": "SARL",
+    "name": "Paso De Los Libres Airport",
+    "latitude": -29.6894,
+    "longitude": -57.1521
+  },
+  {
+    "iata": "APZ",
+    "icao": "SAHZ",
+    "name": "Zapala Airport",
+    "latitude": -38.975498,
+    "longitude": -70.113602
+  },
+  {
+    "iata": "ARR",
+    "icao": "SAVR",
+    "name": "D. Casimiro Szlapelis Airport",
+    "latitude": -45.013599,
+    "longitude": -70.812202
+  },
+  {
+    "iata": "BHI",
+    "icao": "SAZB",
+    "name": "Comandante Espora Airport",
+    "latitude": -38.725,
+    "longitude": -62.1693
+  },
+  {
+    "iata": "BRC",
+    "icao": "SAZS",
+    "name": "Teniente Luis Candelaria International Airport",
+    "latitude": -41.151199,
+    "longitude": -71.157501
+  },
+  {
+    "iata": "CLX",
+    "icao": "SATC",
+    "name": "Aeródromo de Clorinda",
+    "latitude": -25.3036,
+    "longitude": -57.7344
+  },
+  {
+    "iata": "CNQ",
+    "icao": "SARC",
+    "name": "Corrientes Airport",
+    "latitude": -27.4455,
+    "longitude": -58.7619
+  },
+  {
+    "iata": "CNT",
+    "icao": "AR-0009",
+    "name": "Charata Airport",
+    "latitude": -27.2164,
+    "longitude": -61.2103
+  },
+  {
+    "iata": "COC",
+    "icao": "SAAC",
+    "name": "Comodoro Pierrestegui Airport",
+    "latitude": -31.2969,
+    "longitude": -57.9966
+  },
+  {
+    "iata": "COR",
+    "icao": "SACO",
+    "name": "Ingeniero Aeronáutico Ambrosio L.V. Taravella International Airport",
+    "latitude": -31.312346,
+    "longitude": -64.208329
+  },
+  {
+    "iata": "CPC",
+    "icao": "SAZY",
+    "name": "Aviador C. Campos Airport",
+    "latitude": -40.075401,
+    "longitude": -71.137299
+  },
+  {
+    "iata": "CPG",
+    "icao": "AR-0390",
+    "name": "Carmen de Patagones Airport",
+    "latitude": -40.7781,
+    "longitude": -62.9803
+  },
+  {
+    "iata": "CRD",
+    "icao": "SAVC",
+    "name": "General Enrique Mosconi International Airport",
+    "latitude": -45.786941,
+    "longitude": -67.463355
+  },
+  {
+    "iata": "CRR",
+    "icao": "SANW",
+    "name": "Ceres Airport",
+    "latitude": -29.872292,
+    "longitude": -61.927925
+  },
+  {
+    "iata": "CSZ",
+    "icao": "SAZC",
+    "name": "Brigadier D.H.E. Ruiz Airport",
+    "latitude": -37.446098,
+    "longitude": -61.889301
+  },
+  {
+    "iata": "CTC",
+    "icao": "SANC",
+    "name": "Coronel Felipe Varela International Airport",
+    "latitude": -28.593117,
+    "longitude": -65.7512
+  },
+  {
+    "iata": "CUT",
+    "icao": "SAZW",
+    "name": "Cutral-Co Airport",
+    "latitude": -38.939701,
+    "longitude": -69.264603
+  },
+  {
+    "iata": "CVH",
+    "icao": "SAHE",
+    "name": "Caviahue Airport",
+    "latitude": -37.851398,
+    "longitude": -71.009201
+  },
+  {
+    "iata": "CVI",
+    "icao": "AR-0007",
+    "name": "Caleta Olivia Airport",
+    "latitude": -46.37428,
+    "longitude": -67.59409
+  },
+  {
+    "iata": "EHL",
+    "icao": "SAVB",
+    "name": "El Bolsón Airfield",
+    "latitude": -41.943199,
+    "longitude": -71.532303
+  },
+  {
+    "iata": "ELO",
+    "icao": "SATD",
+    "name": "El Dorado Airport",
+    "latitude": -26.397499,
+    "longitude": -54.574699
+  },
+  {
+    "iata": "EMX",
+    "icao": "SAVD",
+    "name": "El Maitén Airport",
+    "latitude": -42.029202,
+    "longitude": -71.172501
+  },
+  {
+    "iata": "EPA",
+    "icao": "SADP",
+    "name": "El Palomar Airport",
+    "latitude": -34.6099,
+    "longitude": -58.6126
+  },
+  {
+    "iata": "EQS",
+    "icao": "SAVE",
+    "name": "Esquel Brigadier Antonio Parodi International Airport",
+    "latitude": -42.908001,
+    "longitude": -71.139503
+  },
+  {
+    "iata": "EZE",
+    "icao": "SAEZ",
+    "name": "Ezeiza International Airport - Ministro Pistarini",
+    "latitude": -34.8222,
+    "longitude": -58.5358
+  },
+  {
+    "iata": "FMA",
+    "icao": "SARF",
+    "name": "Formosa National Airport",
+    "latitude": -26.2127,
+    "longitude": -58.2281
+  },
+  {
+    "iata": "FTE",
+    "icao": "SAWC",
+    "name": "El Calafate - Commander Armando Tola International Airport",
+    "latitude": -50.280267,
+    "longitude": -72.053401
+  },
+  {
+    "iata": "GGS",
+    "icao": "SAWR",
+    "name": "Gobernador Gregores Airport",
+    "latitude": -48.7831,
+    "longitude": -70.150002
+  },
+  {
+    "iata": "GHU",
+    "icao": "SAAG",
+    "name": "Gualeguaychu Airport",
+    "latitude": -33.005567,
+    "longitude": -58.612833
+  },
+  {
+    "iata": "GNR",
+    "icao": "SAHR",
+    "name": "Dr. Arturo H. Illia Airport",
+    "latitude": -39.000702,
+    "longitude": -67.620499
+  },
+  {
+    "iata": "GPO",
+    "icao": "SAZG",
+    "name": "General Pico Airport",
+    "latitude": -35.696201,
+    "longitude": -63.758301
+  },
+  {
+    "iata": "HOS",
+    "icao": "SAHC",
+    "name": "Chos Malal Airport",
+    "latitude": -37.444698,
+    "longitude": -70.222504
+  },
+  {
+    "iata": "IGB",
+    "icao": "SAVJ",
+    "name": "Ingeniero Jacobacci - Captain H R Bordón Airport",
+    "latitude": -41.3209,
+    "longitude": -69.574898
+  },
+  {
+    "iata": "IGR",
+    "icao": "SARI",
+    "name": "Cataratas Del Iguazú International Airport",
+    "latitude": -25.737301,
+    "longitude": -54.4734
+  },
+  {
+    "iata": "IRJ",
+    "icao": "SANL",
+    "name": "Capitan V A Almonacid Airport",
+    "latitude": -29.381599,
+    "longitude": -66.795799
+  },
+  {
+    "iata": "JSM",
+    "icao": "SAWS",
+    "name": "Jose De San Martin Airport",
+    "latitude": -44.048599243199995,
+    "longitude": -70.4589004517
+  },
+  {
+    "iata": "JUJ",
+    "icao": "SASJ",
+    "name": "Gobernador Horacio Guzman International Airport",
+    "latitude": -24.392799,
+    "longitude": -65.097801
+  },
+  {
+    "iata": "LCM",
+    "icao": "SACC",
+    "name": "La Cumbre Airport",
+    "latitude": -31.0058,
+    "longitude": -64.531898
+  },
+  {
+    "iata": "LCP",
+    "icao": "LCP",
+    "name": "Loncopue Airport",
+    "latitude": -38.081902,
+    "longitude": -70.643898
+  },
+  {
+    "iata": "LGS",
+    "icao": "SAMM",
+    "name": "Comodoro D.R. Salomón Airport",
+    "latitude": -35.493599,
+    "longitude": -69.574303
+  },
+  {
+    "iata": "LHS",
+    "icao": "SAVH",
+    "name": "Las Heras Airport",
+    "latitude": -46.538517,
+    "longitude": -68.965323
+  },
+  {
+    "iata": "LLS",
+    "icao": "SATK",
+    "name": "Alferez Armando Rodriguez Airport",
+    "latitude": -24.721399,
+    "longitude": -60.548801
+  },
+  {
+    "iata": "LMD",
+    "icao": "AR-0011",
+    "name": "Los Menucos Airport",
+    "latitude": -40.817699,
+    "longitude": -68.074699
+  },
+  {
+    "iata": "LPG",
+    "icao": "SADL",
+    "name": "La Plata Airport",
+    "latitude": -34.9722,
+    "longitude": -57.8947
+  },
+  {
+    "iata": "LUQ",
+    "icao": "SAOU",
+    "name": "Brigadier Mayor D Cesar Raul Ojeda Airport",
+    "latitude": -33.273201,
+    "longitude": -66.3564
+  },
+  {
+    "iata": "MCS",
+    "icao": "SARM",
+    "name": "Monte Caseros Airport",
+    "latitude": -30.2719,
+    "longitude": -57.6402
+  },
+  {
+    "iata": "MDQ",
+    "icao": "SAZM",
+    "name": "Ástor Piazzola International Airport",
+    "latitude": -37.9342,
+    "longitude": -57.5733
+  },
+  {
+    "iata": "MDX",
+    "icao": "SATM",
+    "name": "Mercedes Airport",
+    "latitude": -29.221399,
+    "longitude": -58.087799
+  },
+  {
+    "iata": "MDZ",
+    "icao": "SAME",
+    "name": "Governor Francisco Gabrielli International Airport",
+    "latitude": -32.831699,
+    "longitude": -68.7929
+  },
+  {
+    "iata": "MJR",
+    "icao": "SA14",
+    "name": "Miramar Airport",
+    "latitude": -38.2271,
+    "longitude": -57.8697
+  },
+  {
+    "iata": "MQD",
+    "icao": "SAVQ",
+    "name": "Maquinchao Airport",
+    "latitude": -41.2430992126,
+    "longitude": -68.7078018188
+  },
+  {
+    "iata": "NCJ",
+    "icao": "SAFS",
+    "name": "Sunchales Aeroclub Airport",
+    "latitude": -30.9575,
+    "longitude": -61.5283
+  },
+  {
+    "iata": "NEC",
+    "icao": "SAZO",
+    "name": "Necochea Airport",
+    "latitude": -38.490746,
+    "longitude": -58.816337
+  },
+  {
+    "iata": "NQN",
+    "icao": "SAZN",
+    "name": "Presidente Perón International Airport",
+    "latitude": -38.949001,
+    "longitude": -68.155701
+  },
+  {
+    "iata": "OES",
+    "icao": "SAVN",
+    "name": "Antoine de Saint Exupéry Airport",
+    "latitude": -40.7512,
+    "longitude": -65.0343
+  },
+  {
+    "iata": "OLN",
+    "icao": "SAVM",
+    "name": "Lago Musters Airport",
+    "latitude": -45.5752,
+    "longitude": -69.077
+  },
+  {
+    "iata": "ORA",
+    "icao": "SASO",
+    "name": "Orán Airport",
+    "latitude": -23.1528,
+    "longitude": -64.329201
+  },
+  {
+    "iata": "OVR",
+    "icao": "SAZF",
+    "name": "Olavarria Airport",
+    "latitude": -36.889999,
+    "longitude": -60.216599
+  },
+  {
+    "iata": "OYA",
+    "icao": "SATG",
+    "name": "Goya Airport",
+    "latitude": -29.1058,
+    "longitude": -59.2189
+  },
+  {
+    "iata": "OYO",
+    "icao": "SAZH",
+    "name": "Tres Arroyos Airport",
+    "latitude": -38.3869,
+    "longitude": -60.3297
+  },
+  {
+    "iata": "PEH",
+    "icao": "SAZP",
+    "name": "Comodoro Pedro Zanni Airport",
+    "latitude": -35.8446,
+    "longitude": -61.8576
+  },
+  {
+    "iata": "PMQ",
+    "icao": "SAWP",
+    "name": "Perito Moreno Jalil Hamer Airport",
+    "latitude": -46.537899,
+    "longitude": -70.978699
+  },
+  {
+    "iata": "PMY",
+    "icao": "SAVY",
+    "name": "El Tehuelche Airport",
+    "latitude": -42.7592,
+    "longitude": -65.1027
+  },
+  {
+    "iata": "PRA",
+    "icao": "SAAP",
+    "name": "General Urquiza Airport",
+    "latitude": -31.7948,
+    "longitude": -60.4804
+  },
+  {
+    "iata": "PRQ",
+    "icao": "SARS",
+    "name": "Termal Airport",
+    "latitude": -26.753611,
+    "longitude": -60.492222
+  },
+  {
+    "iata": "PSS",
+    "icao": "SARP",
+    "name": "Libertador Gral D Jose De San Martin Airport",
+    "latitude": -27.3858,
+    "longitude": -55.9707
+  },
+  {
+    "iata": "PUD",
+    "icao": "SAWD",
+    "name": "Puerto Deseado Airport",
+    "latitude": -47.7353,
+    "longitude": -65.9041
+  },
+  {
+    "iata": "QRF",
+    "icao": "AR-0005",
+    "name": "Bragado Airport",
+    "latitude": -35.145811,
+    "longitude": -60.480294
+  },
+  {
+    "iata": "RAF",
+    "icao": "SAFR",
+    "name": "Rafaela Airport",
+    "latitude": -31.2825,
+    "longitude": -61.5017
+  },
+  {
+    "iata": "RCQ",
+    "icao": "SATR",
+    "name": "Reconquista Airport",
+    "latitude": -29.210278,
+    "longitude": -59.683333
+  },
+  {
+    "iata": "RCU",
+    "icao": "SAOC",
+    "name": "Area De Material Airport",
+    "latitude": -33.085098,
+    "longitude": -64.261299
+  },
+  {
+    "iata": "RDS",
+    "icao": "SAHS",
+    "name": "Rincon De Los Sauces Airport",
+    "latitude": -37.390598,
+    "longitude": -68.904198
+  },
+  {
+    "iata": "REL",
+    "icao": "SAVT",
+    "name": "Almirante Marco Andres Zar Airport",
+    "latitude": -43.2105,
+    "longitude": -65.2703
+  },
+  {
+    "iata": "RES",
+    "icao": "SARE",
+    "name": "Resistencia International Airport",
+    "latitude": -27.44991,
+    "longitude": -59.056125
+  },
+  {
+    "iata": "RGA",
+    "icao": "SAWE",
+    "name": "Gobernador Ramón Trejo Noel International Airport",
+    "latitude": -53.7777,
+    "longitude": -67.7494
+  },
+  {
+    "iata": "RGL",
+    "icao": "SAWG",
+    "name": "Piloto Civil Norberto Fernández International Airport",
+    "latitude": -51.608791,
+    "longitude": -69.308948
+  },
+  {
+    "iata": "RHD",
+    "icao": "SANR",
+    "name": "Termas de Río Hondo international Airport",
+    "latitude": -27.4966,
+    "longitude": -64.93595
+  },
+  {
+    "iata": "RLO",
+    "icao": "SAOS",
+    "name": "Valle Del Conlara International Airport",
+    "latitude": -32.384701,
+    "longitude": -65.186501
+  },
+  {
+    "iata": "ROS",
+    "icao": "SAAR",
+    "name": "Rosario Islas Malvinas International Airport",
+    "latitude": -32.9036,
+    "longitude": -60.785
+  },
+  {
+    "iata": "ROY",
+    "icao": "SAWM",
+    "name": "Rio Mayo Airport",
+    "latitude": -45.703899,
+    "longitude": -70.245598
+  },
+  {
+    "iata": "RSA",
+    "icao": "SAZR",
+    "name": "Santa Rosa Airport",
+    "latitude": -36.588299,
+    "longitude": -64.275703
+  },
+  {
+    "iata": "RYO",
+    "icao": "SAWT",
+    "name": "28 de Noviembre Airport",
+    "latitude": -51.605,
+    "longitude": -72.2203
+  },
+  {
+    "iata": "RZA",
+    "icao": "SAWU",
+    "name": "Santa Cruz Airport",
+    "latitude": -50.0165,
+    "longitude": -68.5792
+  },
+  {
+    "iata": "SDE",
+    "icao": "SANE",
+    "name": "Vicecomodoro Angel D. La Paz Aragonés Airport",
+    "latitude": -27.765556335399996,
+    "longitude": -64.3099975586
+  },
+  {
+    "iata": "SFN",
+    "icao": "SAAV",
+    "name": "Sauce Viejo Airport",
+    "latitude": -31.7117,
+    "longitude": -60.8117
+  },
+  {
+    "iata": "SGV",
+    "icao": "SAVS",
+    "name": "Sierra Grande Airport",
+    "latitude": -41.591702,
+    "longitude": -65.339401
+  },
+  {
+    "iata": "SLA",
+    "icao": "SASA",
+    "name": "Martín Miguel de Güemes International Airport",
+    "latitude": -24.856001,
+    "longitude": -65.486198
+  },
+  {
+    "iata": "SST",
+    "icao": "SAZL",
+    "name": "Santa Teresita Airport",
+    "latitude": -36.5423,
+    "longitude": -56.7218
+  },
+  {
+    "iata": "TDL",
+    "icao": "SAZT",
+    "name": "Héroes de Malvinas Airport",
+    "latitude": -37.234634,
+    "longitude": -59.228647
+  },
+  {
+    "iata": "TTG",
+    "icao": "SAST",
+    "name": "General Enrique Mosconi Airport",
+    "latitude": -22.616877,
+    "longitude": -63.793015
+  },
+  {
+    "iata": "TUC",
+    "icao": "SANT",
+    "name": "Teniente Benjamín Matienzo International Airport",
+    "latitude": -26.837397,
+    "longitude": -65.104195
+  },
+  {
+    "iata": "UAQ",
+    "icao": "SANU",
+    "name": "Domingo Faustino Sarmiento Airport",
+    "latitude": -31.571501,
+    "longitude": -68.418198
+  },
+  {
+    "iata": "ULA",
+    "icao": "SAWJ",
+    "name": "Capitan D Daniel Vazquez Airport",
+    "latitude": -49.306816,
+    "longitude": -67.802596
+  },
+  {
+    "iata": "USH",
+    "icao": "SAWH",
+    "name": "Ushuaia - Malvinas Argentinas International Airport",
+    "latitude": -54.8433,
+    "longitude": -68.2958
+  },
+  {
+    "iata": "UZU",
+    "icao": "SATU",
+    "name": "Curuzu Cuatia Airport",
+    "latitude": -29.7706,
+    "longitude": -57.9789
+  },
+  {
+    "iata": "VCF",
+    "icao": "AR-0017",
+    "name": "Valcheta Airport",
+    "latitude": -40.700001,
+    "longitude": -66.150002
+  },
+  {
+    "iata": "VDM",
+    "icao": "SAVV",
+    "name": "Gobernador Castello Airport",
+    "latitude": -40.8692,
+    "longitude": -63.0004
+  },
+  {
+    "iata": "VDR",
+    "icao": "SAOD",
+    "name": "Villa Dolores Airport",
+    "latitude": -31.9452,
+    "longitude": -65.146301
+  },
+  {
+    "iata": "VGS",
+    "icao": "AR-0010",
+    "name": "General Villegas Airport",
+    "latitude": -34.995728,
+    "longitude": -62.999725
+  },
+  {
+    "iata": "VLG",
+    "icao": "SAZV",
+    "name": "Villa Gesell Airport",
+    "latitude": -37.2354,
+    "longitude": -57.0292
+  },
+  {
+    "iata": "VME",
+    "icao": "SAOR",
+    "name": "Villa Reynolds Airport",
+    "latitude": -33.7299003601,
+    "longitude": -65.3873977661
+  }
+]
