@@ -3,27 +3,34 @@
 //
 // INDICE DE ENDPOINTS (en este orden estan abajo):
 //   GET    /api/health                       chequeo de que Express vive
+//   POST   /api/registro                     crea una cuenta y abre sesion
+//   POST   /api/login                        abre sesion
+//   POST   /api/logout                  (S)  cierra sesion
 //   GET    /api/aeropuertos                  catalogo de aeropuertos
-//   GET    /api/vuelos                       lista de vuelos
-//   POST   /api/vuelos                       guarda una lista de vuelos
-//   PUT    /api/vuelos/:number/:fecha        reemplaza un vuelo
-//   DELETE /api/vuelos/:number/:fecha        borra un vuelo
-//   GET    /api/vuelos/:number/mapa          origen y destino con coordenadas
-//   GET    /api/programacion                 tipo de actividad de cada dia
-//   POST   /api/programacion                 guarda el tipo de cada dia
-//   GET    /api/libro                        hojas del libro de vuelo
-//   PUT    /api/libro/:number/:fecha         crea o reemplaza una hoja
-//   POST   /api/libro/exportar               devuelve el libro en .xlsx
+//   GET    /api/vuelos                  (S)  lista de vuelos
+//   POST   /api/vuelos                  (S)  guarda una lista de vuelos
+//   PUT    /api/vuelos/:number/:fecha   (S)  reemplaza un vuelo
+//   DELETE /api/vuelos/:number/:fecha   (S)  borra un vuelo
+//   GET    /api/vuelos/:number/mapa     (S)  origen y destino con coordenadas
+//   GET    /api/programacion            (S)  tipo de actividad de cada dia
+//   POST   /api/programacion            (S)  guarda el tipo de cada dia
+//   GET    /api/libro                   (S)  hojas del libro de vuelo
+//   PUT    /api/libro/:number/:fecha    (S)  crea o reemplaza una hoja
+//   POST   /api/libro/exportar          (S)  devuelve el libro en .xlsx
 //   GET    /api/meteo?icao=SAEZ,SACO         METAR de cada aeropuerto (NOAA)
 //
+// (S) = requiere sesion: el celular manda "Authorization: Bearer <token>" y el back
+// solo devuelve o toca datos de ESE piloto. Sin token valido responde 401.
+//
 // Archivos de apoyo (todos en src/):
+//   auth.ts          hash de contraseñas, tokens y el chequeo de sesion
 //   db.ts            el PrismaClient compartido
 //   validaciones.ts  valida el body de POST/PUT antes de tocar la base
 //   exportar.ts      arma el .xlsx del libro
 //   meteo.ts         consulta los METAR a NOAA
 //
 // Fechas: viajan como AAAA-MM-DD y se guardan a medianoche UTC.
-// Un vuelo se identifica por numero + fecha (el mismo numero vuelve otro dia).
+// Un vuelo se identifica por piloto + numero + fecha (el mismo numero vuelve otro dia).
 // =============================================================================
 
 // dotenv carga las variables definidas en .env (DATABASE_URL, PORT).
@@ -32,6 +39,7 @@ import "dotenv/config";
 import cors from "cors";
 import express from "express";
 
+import { hashear, nuevoSalt, nuevoToken, pilotoDe, requerirSesion } from "./auth";
 import { prisma } from "./db";
 import { exportarLibro } from "./exportar";
 import { getMeteo } from "./meteo";
@@ -66,10 +74,17 @@ app.use((req, _res, next) => {
   next();
 });
 
+// Rutas con sesion: sin token valido responden 401 y su codigo ni se ejecuta.
+// (health, registro, login, aeropuertos y meteo quedan abiertos.)
+app.use("/api/vuelos", requerirSesion); // incluye /api/vuelos/:number/mapa
+app.use("/api/programacion", requerirSesion);
+app.use("/api/libro", requerirSesion); // incluye /api/libro/exportar
+
 // Convierte un NuevoVuelo (ya validado) en los datos que guarda Prisma.
 // Lo usan POST y PUT de /api/vuelos. idPorIata: codigo IATA -> id del aeropuerto.
-function datosDeVuelo(vuelo: NuevoVuelo, idPorIata: Map<string, number>) {
+function datosDeVuelo(vuelo: NuevoVuelo, idPorIata: Map<string, number>, pilotoId: number) {
   return {
+    pilotoId,
     number: vuelo.number,
     date: aFecha(vuelo.date),
     originId: idPorIata.get(vuelo.from)!,
@@ -89,13 +104,67 @@ async function idsPorIata(codigos: string[]) {
 }
 
 // -----------------------------------------------------------------------------
-// 2. Health
+// 2. Health y cuentas (registro, login, logout)
 // -----------------------------------------------------------------------------
 
 // GET /api/health
 // Prueba minima: si responde, Express esta vivo aunque la base falle.
 app.get("/api/health", (_req, res) => {
   res.json({ ok: true });
+});
+
+// Lee email y contraseña del body (email en minuscula y sin espacios).
+function leerCuenta(body: unknown) {
+  const d = (body ?? {}) as Record<string, unknown>;
+  return {
+    email: typeof d.email === "string" ? d.email.trim().toLowerCase() : "",
+    password: typeof d.password === "string" ? d.password : "",
+  };
+}
+
+// POST /api/registro
+// Body: { email, password }. Guarda el salt y el hash de (contraseña + salt), nunca la contraseña.
+// 201 { token } (ya queda con sesion abierta) | 400 datos invalidos | 409 el email ya existe.
+app.post("/api/registro", async (req, res) => {
+  const { email, password } = leerCuenta(req.body);
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return res.status(400).json({ error: "Email inválido" });
+  if (password.length < 8) return res.status(400).json({ error: "La contraseña tiene que tener al menos 8 caracteres" });
+
+  if (await prisma.piloto.findUnique({ where: { email } })) {
+    return res.status(409).json({ error: "Ya existe una cuenta con ese email" });
+  }
+
+  const salt = nuevoSalt();
+  const token = nuevoToken();
+  await prisma.piloto.create({ data: { email, salt, passwordHash: await hashear(password, salt), token } });
+
+  res.status(201).json({ token });
+});
+
+// POST /api/login
+// Body: { email, password }. Vuelve a calcular hash(contraseña + salt guardado) y compara HASH contra HASH.
+// 200 { token } | 401 email o contraseña incorrectos (mismo mensaje en los dos casos).
+app.post("/api/login", async (req, res) => {
+  const { email, password } = leerCuenta(req.body);
+
+  const piloto = await prisma.piloto.findUnique({ where: { email } });
+  if (!piloto || (await hashear(password, piloto.salt)) !== piloto.passwordHash) {
+    return res.status(401).json({ error: "Email o contraseña incorrectos" });
+  }
+
+  // Cada login crea un token nuevo (pisa el anterior).
+  const token = nuevoToken();
+  await prisma.piloto.update({ where: { id: piloto.id }, data: { token } });
+
+  res.json({ token });
+});
+
+// POST /api/logout
+// Borra el token del piloto: desde ese momento el token viejo da 401. 204 ok | 401 sin sesion.
+app.post("/api/logout", requerirSesion, async (_req, res) => {
+  await prisma.piloto.update({ where: { id: pilotoDe(res) }, data: { token: null } });
+
+  res.status(204).end();
 });
 
 // -----------------------------------------------------------------------------
@@ -118,9 +187,10 @@ app.get("/api/aeropuertos", async (_req, res) => {
 // -----------------------------------------------------------------------------
 
 // GET /api/vuelos
-// Lista los vuelos con origen y destino en codigo IATA.
+// Lista los vuelos DEL PILOTO con origen y destino en codigo IATA.
 app.get("/api/vuelos", async (_req, res) => {
   const vuelos = await prisma.vuelo.findMany({
+    where: { pilotoId: pilotoDe(res) },
     include: { origin: true, destination: true },
     orderBy: [{ date: "asc" }, { dep: "asc" }],
   });
@@ -149,11 +219,12 @@ app.post("/api/vuelos", async (req, res) => {
     return res.status(400).json({ error: "Hay filas con datos inválidos", errores: validacion.errores });
   }
   const vuelos = validacion.vuelos;
+  const pilotoId = pilotoDe(res);
 
-  // Duplicados: los que ya estan en la base + los repetidos dentro del mismo envio.
+  // Duplicados: los que ya estan en la base (de ESTE piloto) + los repetidos dentro del mismo envio.
   const etiqueta = (numero: string, fecha: string) => `${numero} ${fecha}`;
   const yaGuardados = await prisma.vuelo.findMany({
-    where: { OR: vuelos.map((v) => ({ number: v.number, date: aFecha(v.date) })) },
+    where: { pilotoId, OR: vuelos.map((v) => ({ number: v.number, date: aFecha(v.date) })) },
     select: { number: true, date: true },
   });
   const enEnvio = vuelos.map((v) => etiqueta(v.number, v.date));
@@ -167,7 +238,7 @@ app.post("/api/vuelos", async (req, res) => {
 
   // $transaction: si falla uno, no se guarda ninguno.
   const ids = await idsPorIata(vuelos.flatMap((v) => [v.from, v.to]));
-  await prisma.$transaction(vuelos.map((v) => prisma.vuelo.create({ data: datosDeVuelo(v, ids) })));
+  await prisma.$transaction(vuelos.map((v) => prisma.vuelo.create({ data: datosDeVuelo(v, ids, pilotoId) })));
 
   res.status(201).json({ insertados: vuelos.length });
 });
@@ -185,16 +256,18 @@ app.put("/api/vuelos/:number/:fecha", async (req, res) => {
     return res.status(400).json({ error: "Hay datos inválidos", errores: validacion.errores });
   }
   const vuelo = validacion.vuelos[0];
+  const pilotoId = pilotoDe(res);
 
+  // Solo busca entre los vuelos de este piloto: uno ajeno responde 404, como si no existiera.
   const actual = await prisma.vuelo.findFirst({
-    where: { number: numero, date: aFecha(fecha) },
+    where: { pilotoId, number: numero, date: aFecha(fecha) },
     select: { id: true },
   });
   if (!actual) return res.status(404).json({ error: "No existe el vuelo" });
 
   try {
     const ids = await idsPorIata([vuelo.from, vuelo.to]);
-    await prisma.vuelo.update({ where: { id: actual.id }, data: datosDeVuelo(vuelo, ids) });
+    await prisma.vuelo.update({ where: { id: actual.id }, data: datosDeVuelo(vuelo, ids, pilotoId) });
     res.json({ ok: true });
   } catch (e) {
     // P2002: choca con la clave unica numero + fecha de otro vuelo.
@@ -212,7 +285,9 @@ app.delete("/api/vuelos/:number/:fecha", async (req, res) => {
   const { fecha } = req.params;
   if (!esFechaReal(fecha)) return res.status(400).json({ error: "La fecha tiene que ser AAAA-MM-DD" });
 
-  const borrados = await prisma.vuelo.deleteMany({ where: { number: numero, date: aFecha(fecha) } });
+  const borrados = await prisma.vuelo.deleteMany({
+    where: { pilotoId: pilotoDe(res), number: numero, date: aFecha(fecha) },
+  });
   if (borrados.count === 0) return res.status(404).json({ error: "No existe el vuelo" });
 
   res.status(204).end();
@@ -231,7 +306,7 @@ app.get("/api/vuelos/:number/mapa", async (req, res) => {
   }
 
   const vuelo = await prisma.vuelo.findFirst({
-    where: fecha ? { number, date: aFecha(fecha) } : { number },
+    where: fecha ? { pilotoId: pilotoDe(res), number, date: aFecha(fecha) } : { pilotoId: pilotoDe(res), number },
     orderBy: { date: "asc" },
     include: { origin: true, destination: true },
   });
@@ -249,7 +324,7 @@ app.get("/api/vuelos/:number/mapa", async (req, res) => {
 // GET /api/programacion
 // Lista los dias con su tipo.
 app.get("/api/programacion", async (_req, res) => {
-  const dias = await prisma.programacion.findMany({ orderBy: { date: "asc" } });
+  const dias = await prisma.programacion.findMany({ where: { pilotoId: pilotoDe(res) }, orderBy: { date: "asc" } });
 
   res.json(dias.map((d) => ({ date: deFecha(d.date), type: d.type })));
 });
@@ -263,12 +338,14 @@ app.post("/api/programacion", async (req, res) => {
     return res.status(400).json({ error: "Hay filas con datos inválidos", errores: validacion.errores });
   }
 
+  const pilotoId = pilotoDe(res);
+
   await prisma.$transaction(
     validacion.dias.map((d) =>
       prisma.programacion.upsert({
-        where: { date: aFecha(d.date) },
+        where: { pilotoId_date: { pilotoId, date: aFecha(d.date) } },
         update: { type: d.type },
-        create: { date: aFecha(d.date), type: d.type },
+        create: { pilotoId, date: aFecha(d.date), type: d.type },
       }),
     ),
   );
@@ -283,7 +360,7 @@ app.post("/api/programacion", async (req, res) => {
 // GET /api/libro
 // Devuelve cada hoja con los mismos keys del formulario de la app (todo como texto).
 app.get("/api/libro", async (_req, res) => {
-  const hojas = await prisma.planDeVuelo.findMany({ orderBy: { fecha: "asc" } });
+  const hojas = await prisma.planDeVuelo.findMany({ where: { pilotoId: pilotoDe(res) }, orderBy: { fecha: "asc" } });
 
   res.json(
     hojas.map((h) => {
@@ -329,9 +406,10 @@ app.put("/api/libro/:number/:fecha", async (req, res) => {
   if (!validacion.ok) return res.status(400).json({ error: "Hay datos inválidos", errores: validacion.errores });
   const hoja = validacion.hoja;
 
-  // El vuelo tiene que existir y haber aterrizado.
+  // El vuelo tiene que ser de este piloto, existir y haber aterrizado.
+  const pilotoId = pilotoDe(res);
   const vuelo = await prisma.vuelo.findUnique({
-    where: { number_date: { number, date: aFecha(fecha) } },
+    where: { pilotoId_number_date: { pilotoId, number, date: aFecha(fecha) } },
     select: { dep: true, arr: true },
   });
   if (!vuelo) return res.status(404).json({ error: "No existe el vuelo" });
@@ -359,8 +437,8 @@ app.put("/api/libro/:number/:fecha", async (req, res) => {
   };
 
   await prisma.planDeVuelo.upsert({
-    where: { number_fecha: { number, fecha: datos.fecha } },
-    create: { number, ...datos },
+    where: { pilotoId_number_fecha: { pilotoId, number, fecha: datos.fecha } },
+    create: { pilotoId, number, ...datos },
     update: datos,
   });
 
@@ -382,7 +460,7 @@ app.post("/api/libro/exportar", async (req, res) => {
     number: p.number.toUpperCase(),
     date: p.date,
   }));
-  const resultado = await exportarLibro(vuelos);
+  const resultado = await exportarLibro(vuelos, pilotoDe(res));
   if (!resultado.ok) return res.status(400).json({ error: resultado.error });
 
   res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");

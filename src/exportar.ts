@@ -38,9 +38,10 @@ const horaAExcel = (hora: string) => {
 
 export type ResultadoExportacion = { ok: true; archivo: Buffer } | { ok: false; error: string };
 
-export async function exportarLibro(vuelos: { number: string; date: string }[]): Promise<ResultadoExportacion> {
+export async function exportarLibro(vuelos: { number: string; date: string }[], pilotoId: number): Promise<ResultadoExportacion> {
+  // Solo las hojas de este piloto: si pide una ajena, "no hay hoja" y falla como si no existiera.
   const hojas = await prisma.planDeVuelo.findMany({
-    where: { OR: vuelos.map((v) => ({ number: v.number, fecha: new Date(`${v.date}T00:00:00Z`) })) },
+    where: { pilotoId, OR: vuelos.map((v) => ({ number: v.number, fecha: new Date(`${v.date}T00:00:00Z`) })) },
     orderBy: [{ fecha: 'asc' }, { horaSalida: 'asc' }],
   });
 

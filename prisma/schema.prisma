@@ -7,6 +7,22 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Usuario de la app. Cada vuelo, dia de programacion y hoja del libro pertenece a un piloto.
+// La contraseña NUNCA se guarda: solo el salt y el hash de (contraseña + salt).
+// token: la sesion abierta (se crea al hacer login y se borra al cerrar sesion).
+model Piloto {
+  id           Int            @id @default(autoincrement())
+  email        String         @unique
+  salt         String
+  passwordHash String
+  token        String?        @unique
+  vuelos       Vuelo[]
+  programacion Programacion[]
+  hojas        PlanDeVuelo[]
+
+  @@map("pilotos")
+}
+
 model Aeropuerto {
   id                  Int         @id @default(autoincrement())
   iata                String      @unique
@@ -21,6 +37,8 @@ model Aeropuerto {
 
 model Vuelo {
   id            Int         @id @default(autoincrement())
+  pilotoId      Int
+  piloto        Piloto      @relation(fields: [pilotoId], references: [id])
   number        String
   date          DateTime
   originId      Int
@@ -33,22 +51,28 @@ model Vuelo {
   aircraft      String?
   crew          String?
 
-  // El mismo numero de vuelo puede repetirse en otro dia: la clave es numero + fecha
-  @@unique([number, date])
+  // El mismo numero de vuelo puede repetirse en otro dia (y en otro piloto): la clave es piloto + numero + fecha
+  @@unique([pilotoId, number, date])
   @@map("vuelos")
 }
 
 // Tipo de actividad de cada dia: vuelo, deadhead, reserva, franco o sin_asignar.
 model Programacion {
-  id   Int      @id @default(autoincrement())
-  date DateTime @unique
-  type String
+  id       Int      @id @default(autoincrement())
+  pilotoId Int
+  piloto   Piloto   @relation(fields: [pilotoId], references: [id])
+  date     DateTime
+  type     String
 
+  // Un dia por piloto
+  @@unique([pilotoId, date])
   @@map("programacion")
 }
 
 model PlanDeVuelo {
   id                      Int       @id @default(autoincrement())
+  pilotoId                Int
+  piloto                  Piloto    @relation(fields: [pilotoId], references: [id])
   // Vuelo de la programación al que pertenece la hoja (número + fecha, igual que en vuelos)
   number                  String
   // Día, mes y año de la hoja, unidos en una fecha
@@ -84,6 +108,6 @@ model PlanDeVuelo {
   // Firma del titular como PNG en base64 (data URL). Sin firma la hoja queda incompleta, pero se puede guardar
   firma                   String
 
-  @@unique([number, fecha])
+  @@unique([pilotoId, number, fecha])
   @@map("plan_de_vuelo")
 }

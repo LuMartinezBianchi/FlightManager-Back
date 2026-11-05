@@ -53,7 +53,7 @@ export type NuevoVuelo = {
 
 type ErrorFila = { fila: number; mensaje: string };
 
-// "1h 50m". Si llega antes de salir, cruza la medianoche.
+// Si llega antes de salir, cruza la medianoche.
 function calcularDuracion(dep: string, arr: string): string {
   const [h1, m1] = dep.split(":").map(Number);
   const [h2, m2] = arr.split(":").map(Number);
